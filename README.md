@@ -128,7 +128,89 @@ npm install
 cp .env.example .env
 ```
 
-### 3. 配置 `.env`
+### 3. 默认推荐：让你自己的 OpenClaw 直接完成安装与接线
+最推荐的接入方式，不是你手动一项项配，而是直接把下面这段 mega prompt 交给你自己的 OpenClaw。
+
+它应该一次性帮你做完这些事：
+- 检查本机 OpenClaw / Gateway / 路径
+- 安装依赖
+- 创建或修正 `.env`
+- 保持安全默认值
+- 跑 `build / test / smoke`
+- 告诉你最后该执行什么命令、该看哪些页面
+
+把下面整段原样交给 OpenClaw：
+
+```text
+你现在要帮我把 OpenClaw Control Center 安装并接到这台机器自己的 OpenClaw 环境上。
+
+你的目标不是解释原理，而是直接完成一次安全的首次接入。
+
+严格约束：
+1. 只允许在 control-center 仓库里工作。
+2. 除非我明确要求，否则不要修改应用源码。
+3. 不要修改 OpenClaw 自己的配置文件。
+4. 不要开启 live import，不要开启 approval mutation。
+5. 所有高风险写操作保持关闭。
+
+请按这个顺序执行：
+
+第一阶段：确认环境
+1. 检查 OpenClaw Gateway 是否可达，并确认正确的 `GATEWAY_URL`。
+2. 确认这台机器上正确的 `OPENCLAW_HOME` 和 `CODEX_HOME`。
+3. 如果订阅或账单快照文件不在默认位置，找到正确的 `OPENCLAW_SUBSCRIPTION_SNAPSHOT_PATH`。
+4. 如果缺少必要路径、进程或文件，不要猜，直接停止并明确告诉我缺什么。
+
+第二阶段：安装项目
+5. 确认当前目录是 control-center 仓库根目录。
+6. 运行依赖安装。
+7. 如果 `.env` 不存在，就从 `.env.example` 创建；如果存在，就在保留安全默认值的前提下修正它。
+
+第三阶段：配置安全首次接入
+8. 保持这些值：
+   - READONLY_MODE=true
+   - LOCAL_TOKEN_AUTH_REQUIRED=true
+   - APPROVAL_ACTIONS_ENABLED=false
+   - APPROVAL_ACTIONS_DRY_RUN=true
+   - IMPORT_MUTATION_ENABLED=false
+   - IMPORT_MUTATION_DRY_RUN=false
+   - UI_MODE=false
+9. 只有在本机环境确实不同的时候，才修改：
+   - GATEWAY_URL
+   - OPENCLAW_HOME
+   - CODEX_HOME
+   - OPENCLAW_SUBSCRIPTION_SNAPSHOT_PATH
+   - UI_PORT
+
+第四阶段：验证安装
+10. 运行：
+   - npm run build
+   - npm test
+   - npm run smoke:ui
+11. 如果有任何一步失败，停止并告诉我：
+   - 哪一步失败了
+   - 原因是什么
+   - 我下一步该怎么修
+
+第五阶段：交付可启动结果
+12. 如果验证通过，输出：
+   - 你实际修改了哪些 env 值
+   - 最终 `.env` 中哪些值沿用了默认值
+   - 我下一步启动 UI 的准确命令
+   - 我应该先打开的 3 个页面
+   - 哪些信号如果为空，属于“正常但未接线完全”
+
+最后请用这个格式给我结果：
+- 环境检查
+- 实际修改
+- 验证结果
+- 下一步命令
+- 首次打开页面
+```
+
+### 4. 如果你要手动配置 `.env`
+如果你不想让 OpenClaw 代劳，再手动配。
+
 第一次接入建议保持安全默认值，不要急着打开写操作。
 
 基线配置如下：
@@ -155,34 +237,6 @@ UI_PORT=4310
 - `CODEX_HOME`：Codex 数据不在 `~/.codex`
 - `OPENCLAW_SUBSCRIPTION_SNAPSHOT_PATH`：订阅或账单快照文件在自定义位置
 - `UI_PORT`：`4310` 已被占用
-
-### 4. 可选：让你自己的 OpenClaw 帮你配置
-你可以把下面这段提示词直接交给自己的 OpenClaw：
-
-```text
-你现在要帮我把 OpenClaw Control Center 接到这台机器自己的 OpenClaw 环境上。
-
-只允许在 control-center 仓库里工作。
-除非我明确要求，否则不要修改应用源码。
-目标是完成一次安全的首次接入配置。
-
-请按下面步骤执行：
-1. 检查 OpenClaw Gateway 是否可达，并告诉我正确的 gateway URL。
-2. 确认这台机器上正确的 OpenClaw 主目录和 Codex 主目录。
-3. 对照 .env.example，创建或更新 .env。
-4. 第一次接入时必须保持这些值：
-   - READONLY_MODE=true
-   - LOCAL_TOKEN_AUTH_REQUIRED=true
-   - APPROVAL_ACTIONS_ENABLED=false
-   - IMPORT_MUTATION_ENABLED=false
-5. 不要开启 live import，也不要开启 approval mutation。
-6. 不要改 OpenClaw 自己的配置文件。
-7. 完成后输出：
-   - 你实际修改了哪些 env 值
-   - 我下一步应该执行的准确命令
-   - 我应该先打开哪些页面来确认接入成功
-8. 如果缺少必要的路径、进程或文件，不要猜，直接明确告诉我缺什么。
-```
 
 ### 5. 验证安装
 执行：
@@ -236,12 +290,10 @@ UI_MODE=true npm run dev
 
 对于受保护的命令模式（如 `command:backup-export`、`command:import-validate`、`command:acks-prune`），如果 `LOCAL_TOKEN_AUTH_REQUIRED=true`，请先设置 `LOCAL_API_TOKEN=<token>`。
 
-## 开源与发布卫生
-- 仓库已经包含 `.gitignore`、`LICENSE` 和可发布的 package 元数据
-- Gateway 地址可通过 `GATEWAY_URL` 配置，不再绑定单一本地 socket
-- PM2、mission harness、workflow 和 verifier 示例都只用仓库相对路径和环境注入 secrets
-- 公开文档统一使用通用 `~/.openclaw/...` 路径，不包含机器私有 home 目录
-- 每次公开推送前，建议先运行 `npm run release:audit`
+## 维护者发布说明
+如果你是仓库维护者、准备公开发布，再看这部分；普通安装用户可以跳过。
+
+- 公开推送前运行 `npm run release:audit`
 - 独立仓库发布流程见 [docs/PUBLISHING.md](docs/PUBLISHING.md)
 
 ## 本地 HTTP 接口

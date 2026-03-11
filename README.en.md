@@ -142,7 +142,89 @@ npm install
 cp .env.example .env
 ```
 
-### 3. Configure `.env`
+### 3. Recommended default: let your own OpenClaw do the install and setup
+The best first-run path is not manual setup. The best path is to give your own OpenClaw one installation prompt and let it do the safe wiring for you.
+
+It should handle:
+- environment checks
+- dependency install
+- `.env` creation or correction
+- safe first-run defaults
+- `build / test / smoke`
+- a final summary of what to run and what to open
+
+Give OpenClaw this full prompt:
+
+```text
+You are installing and connecting OpenClaw Control Center to this machine's OpenClaw environment.
+
+Your goal is not to explain theory. Your goal is to complete a safe first-run setup end to end.
+
+Hard rules:
+1. Work only inside the control-center repository.
+2. Do not modify application source code unless I explicitly ask.
+3. Do not modify OpenClaw's own config files.
+4. Do not enable live import or approval mutations.
+5. Keep all high-risk write paths disabled.
+
+Follow this order:
+
+Phase 1: inspect the environment
+1. Check whether the OpenClaw Gateway is reachable and confirm the correct `GATEWAY_URL`.
+2. Confirm the correct `OPENCLAW_HOME` and `CODEX_HOME` on this machine.
+3. If the subscription or billing snapshot is stored outside the default path, find the correct `OPENCLAW_SUBSCRIPTION_SNAPSHOT_PATH`.
+4. If any required path, process, or file is missing, stop and tell me exactly what is missing instead of guessing.
+
+Phase 2: install the project
+5. Confirm that the current directory is the control-center repo root.
+6. Install dependencies.
+7. If `.env` does not exist, create it from `.env.example`. If it already exists, update it while preserving safe first-run defaults.
+
+Phase 3: apply safe first-run settings
+8. Keep these values:
+   - READONLY_MODE=true
+   - LOCAL_TOKEN_AUTH_REQUIRED=true
+   - APPROVAL_ACTIONS_ENABLED=false
+   - APPROVAL_ACTIONS_DRY_RUN=true
+   - IMPORT_MUTATION_ENABLED=false
+   - IMPORT_MUTATION_DRY_RUN=false
+   - UI_MODE=false
+9. Only change these when the machine actually requires it:
+   - GATEWAY_URL
+   - OPENCLAW_HOME
+   - CODEX_HOME
+   - OPENCLAW_SUBSCRIPTION_SNAPSHOT_PATH
+   - UI_PORT
+
+Phase 4: verify the install
+10. Run:
+   - npm run build
+   - npm test
+   - npm run smoke:ui
+11. If any step fails, stop and tell me:
+   - which step failed
+   - why it failed
+   - what I should do next
+
+Phase 5: hand off a ready-to-run result
+12. If verification passes, print:
+   - which env values you changed
+   - which env values stayed on the defaults
+   - the exact command I should run next to launch the UI
+   - the first 3 dashboard pages I should open
+   - which missing signals are normal for a partially connected environment
+
+Format your final answer as:
+- Environment check
+- Actual changes
+- Verification result
+- Next command
+- First pages to open
+```
+
+### 4. If you want to configure `.env` manually
+Only use this path if you do not want OpenClaw to handle setup for you.
+
 For a safe first run, keep the mutation guards in place.
 
 Use this baseline:
@@ -169,34 +251,6 @@ Change only these values if your environment needs it:
 - `CODEX_HOME`: when Codex data is not stored in `~/.codex`
 - `OPENCLAW_SUBSCRIPTION_SNAPSHOT_PATH`: when your billing/subscription snapshot lives somewhere custom
 - `UI_PORT`: when `4310` is already in use
-
-### 4. Optional: ask your own OpenClaw to prepare the setup
-If you want OpenClaw to help configure the environment, give it this prompt:
-
-```text
-You are helping me connect OpenClaw Control Center to this machine's OpenClaw installation.
-
-Work only inside the control-center repository.
-Do not modify application source code unless I explicitly ask.
-Goal: prepare a safe first-run setup.
-
-Please do the following:
-1. Check whether the OpenClaw Gateway is reachable and tell me the correct gateway URL.
-2. Confirm the correct OpenClaw home path and Codex home path on this machine.
-3. Compare those paths with .env.example and create or update .env.
-4. Keep these values safe for first run:
-   - READONLY_MODE=true
-   - LOCAL_TOKEN_AUTH_REQUIRED=true
-   - APPROVAL_ACTIONS_ENABLED=false
-   - IMPORT_MUTATION_ENABLED=false
-5. Do not enable live import or approval mutations.
-6. Do not change OpenClaw's own config.
-7. At the end, print:
-   - the final env values you changed
-   - the exact commands I should run next
-   - the first dashboard pages I should open to confirm everything works
-8. If any required path, process, or file is missing, stop and tell me exactly what is missing instead of guessing.
-```
 
 ### 5. Verify the install
 Run:
@@ -250,13 +304,11 @@ On your first launch, check these pages in order:
 
 For protected command modes (`command:backup-export`, `command:import-validate`, `command:acks-prune`), set `LOCAL_API_TOKEN=<token>` unless `LOCAL_TOKEN_AUTH_REQUIRED=false`.
 
-## Repository hygiene (Phase 113, Open-source release readiness)
-- Repo now ships with `.gitignore`, `LICENSE`, and publishable package metadata.
-- Gateway connectivity is configurable via `GATEWAY_URL` instead of being hard-wired to one local socket.
-- PM2, mission harness, workflow, and verifier examples now use repo-relative paths and environment-injected secrets only.
-- Public docs now refer to generic `~/.openclaw/...` locations instead of machine-specific home directories.
-- Run `npm run release:audit` before every public push.
-- See [`docs/PUBLISHING.md`](docs/PUBLISHING.md) for the recommended standalone-repo release flow.
+## Maintainer publishing notes
+If you are publishing the repository itself, not just installing it, use this section. Normal operators can skip it.
+
+- Run `npm run release:audit` before public pushes
+- See [`docs/PUBLISHING.md`](docs/PUBLISHING.md) for the standalone repo release flow
 
 ## Local HTTP endpoints
 - `GET /snapshot`: raw snapshot JSON

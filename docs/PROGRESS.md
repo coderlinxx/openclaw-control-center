@@ -1,5 +1,22 @@
 # Progress
 
+## Phase 140 (README onboarding now defaults to OpenClaw-driven setup) — Completed
+- Scope:
+  - Make the README recommend OpenClaw-assisted install as the primary onboarding path instead of an optional extra.
+  - Remove maintainer-only publishing hygiene details from the main operator onboarding flow.
+- Changed files:
+  - `README.md`
+  - `README.en.md`
+  - `docs/PROGRESS.md`
+- Implementation:
+  - Rewrote the install section so the default recommendation is a full OpenClaw mega prompt that installs, configures, verifies, and hands off the next steps.
+  - Moved manual `.env` editing into a fallback path instead of the default path.
+  - Compressed repository publishing notes into a small maintainer-only section.
+- Verification:
+  - `npm run build`
+  - `npm test`
+  - `npm run smoke:ui`
+
 ## Phase 139 (README now highlights token attribution instead of the overview ring) — Completed
 - Scope:
   - Replace the less informative left-hand README screenshot with a token-attribution pie chart view.
