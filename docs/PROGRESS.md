@@ -22,6 +22,28 @@
   - visual review of the README-linked assets
   - `npm run release:audit`
 
+## Phase 145 (README visuals restored to PNG screenshots for GitHub rendering) — Completed
+- Scope:
+  - Fix blank README image rendering on GitHub after the SVG switch.
+  - Restore the real PNG screenshots the project was already comfortable showing publicly.
+- Changed files:
+  - `README.md`
+  - `README.en.md`
+  - `docs/assets/overview-hero-zh.png`
+  - `docs/assets/overview-hero-en.png`
+  - `docs/assets/token-share-zh.png`
+  - `docs/assets/token-share-en.png`
+  - `docs/assets/staff-zh.png`
+  - `docs/assets/staff-en.png`
+  - `docs/PROGRESS.md`
+- Implementation:
+  - Switched both README files back from SVG illustrations to PNG screenshots.
+  - Restored Chinese screenshots for the Chinese README and English screenshots for the English README.
+  - Reverted the preview copy back to screenshot framing so GitHub renders the page as intended.
+- Verification:
+  - README asset references reviewed
+  - `npm run release:audit`
+
 ## Phase 143 (Tasks page now defaults to schedule and cron execution) — Completed
 - Scope:
   - Stop making the tasks page look empty or contradictory when staff are active through cron/ad-hoc sessions but there are no tracked task rows.

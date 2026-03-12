@@ -1,6 +1,6 @@
 # OpenClaw Control Center
 
-<img src="docs/assets/readme-hero-en.svg" alt="OpenClaw Control Center overview hero illustration" width="1200" />
+<img src="docs/assets/overview-hero-en.png" alt="OpenClaw Control Center overview hero screenshot" width="1200" />
 
 Safety-first local control center for OpenClaw.
 
@@ -26,16 +26,16 @@ Language: **English** | [中文](README.md)
 - teams running OpenClaw on one machine or a reachable local environment
 - maintainers who want a public-ready, safety-first OpenClaw dashboard instead of a generic agent platform
 
-## UI preview
-These public-facing illustrations are intentionally sanitized: no real runtime names, recent output, or live usage totals:
+## Screenshots
+Example UI from a local OpenClaw environment:
 
 <table>
   <tr>
     <td width="56%">
-      <img src="docs/assets/readme-token-en.svg" alt="OpenClaw Control Center token attribution illustration" width="100%" />
+      <img src="docs/assets/token-share-en.png" alt="OpenClaw Control Center token attribution screenshot" width="100%" />
     </td>
     <td width="44%">
-      <img src="docs/assets/readme-staff-en.svg" alt="OpenClaw Control Center staff page illustration" width="100%" />
+      <img src="docs/assets/staff-en.png" alt="OpenClaw Control Center staff page screenshot" width="100%" />
     </td>
   </tr>
   <tr>

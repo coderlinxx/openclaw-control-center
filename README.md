@@ -1,6 +1,6 @@
 # OpenClaw Control Center
 
-<img src="docs/assets/readme-hero-zh.svg" alt="OpenClaw Control Center 总览横幅示意图" width="1200" />
+<img src="docs/assets/overview-hero-zh.png" alt="OpenClaw Control Center 总览横幅截图" width="1200" />
 
 OpenClaw 的安全优先、本地优先控制中心。
 
@@ -26,16 +26,16 @@ OpenClaw 的安全优先、本地优先控制中心。
 - 在同一台机器或可达本地环境里运行 OpenClaw 的使用者
 - 想公开发布一个安全优先的 OpenClaw 控制台，而不是做通用 agent 平台的人
 
-## 界面预览
-以下示意图用于公开仓库展示，不包含真实运行时名称、真实最近产出或真实用量数字：
+## 截图
+以下截图来自一个本地 OpenClaw 环境：
 
 <table>
   <tr>
     <td width="56%">
-      <img src="docs/assets/readme-token-zh.svg" alt="OpenClaw Control Center 中文 token 消耗归因示意图" width="100%" />
+      <img src="docs/assets/token-share-zh.png" alt="OpenClaw Control Center 中文 token 消耗归因截图" width="100%" />
     </td>
     <td width="44%">
-      <img src="docs/assets/readme-staff-zh.svg" alt="OpenClaw Control Center 中文员工页示意图" width="100%" />
+      <img src="docs/assets/staff-zh.png" alt="OpenClaw Control Center 中文员工页截图" width="100%" />
     </td>
   </tr>
   <tr>
