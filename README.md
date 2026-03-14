@@ -58,12 +58,16 @@ cp .env.example .env
 npm run build
 npm test
 npm run smoke:ui
-UI_MODE=true npm run dev
+npm run dev:ui
 ```
 
 然后打开：
 - `http://127.0.0.1:4310/?section=overview&lang=zh`
 - `http://127.0.0.1:4310/?section=overview&lang=en`
+
+说明：
+- 推荐用 `npm run dev:ui` 启动界面；它比 `UI_MODE=true npm run dev` 更稳，尤其是 Windows shell。
+- `npm run dev` 只会执行一次 monitor，不会启动 HTTP UI。
 
 ## 分区功能说明
 
@@ -298,6 +302,9 @@ LOCAL_TOKEN_AUTH_REQUIRED=true
 UI_MODE=false
 UI_PORT=4310
 
+# 只有在反向代理、Docker 或另一台机器需要访问 UI 时才设置：
+# UI_BIND_ADDRESS=0.0.0.0
+
 # 只有路径不是默认值时才需要设置：
 # OPENCLAW_HOME=/path/to/.openclaw
 # OPENCLAW_CONFIG_PATH=/path/to/openclaw.json
@@ -316,6 +323,7 @@ UI_PORT=4310
 - `CODEX_HOME`：Codex 数据不在 `~/.codex`
 - `OPENCLAW_SUBSCRIPTION_SNAPSHOT_PATH`：订阅或账单快照文件在自定义位置
 - `UI_PORT`：`4310` 已被占用
+- `UI_BIND_ADDRESS`：反向代理、Docker、远程浏览器不在同一回环网络里，默认 `127.0.0.1` 无法被它们访问
 
 ### 5. 验证安装
 执行：
@@ -332,7 +340,7 @@ npm run smoke:ui
 
 ### 6. 启动界面
 ```bash
-UI_MODE=true npm run dev
+npm run dev:ui
 ```
 
 然后打开：
@@ -340,6 +348,7 @@ UI_MODE=true npm run dev
 - 英文界面：`http://127.0.0.1:4310/?section=overview&lang=en`
 
 如果你改了 `UI_PORT`，把 `4310` 替换成你的端口。
+如果你需要让反向代理、Docker 或另一台机器访问这个 UI，再额外设置 `UI_BIND_ADDRESS=0.0.0.0`。
 
 ### 7. 首次检查顺序
 1. `总览`：页面能正常打开，并且能看到当前系统状态
@@ -352,6 +361,7 @@ UI_MODE=true npm run dev
 - 实时活动全空，通常是 `GATEWAY_URL` 错了，或者 OpenClaw Gateway 没启动
 - `文档 / 记忆` 范围不对，通常是 `OPENCLAW_HOME` / `OPENCLAW_CONFIG_PATH` / `OPENCLAW_WORKSPACE_ROOT` 指错了，或者 `openclaw.json` 不可读
 - `用量 / 订阅` 没数据，通常是 `CODEX_HOME` 或 `OPENCLAW_SUBSCRIPTION_SNAPSHOT_PATH` 没配对
+- 地址打不开或代理转发后不通，先确认你运行的是 `npm run dev:ui`；如果代理不在同一台机器/容器内，再设置 `UI_BIND_ADDRESS=0.0.0.0`
 - 如果你只是想先安全观察，不要改默认的只读和 mutation 开关
 
 ## 本地命令
@@ -368,6 +378,9 @@ UI_MODE=true npm run dev
 - `npm run validate`
 
 对于受保护的命令模式（如 `command:backup-export`、`command:import-validate`、`command:acks-prune`），如果 `LOCAL_TOKEN_AUTH_REQUIRED=true`，请先设置 `LOCAL_API_TOKEN=<token>`。
+另外：
+- `npm run dev`：只执行一次 monitor，不启动 UI
+- `npm run dev:ui`：启动本地 UI 服务
 
 ## 维护者发布说明
 如果你是仓库维护者、准备公开发布，再看这部分；普通安装用户可以跳过。

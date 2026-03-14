@@ -58,12 +58,16 @@ cp .env.example .env
 npm run build
 npm test
 npm run smoke:ui
-UI_MODE=true npm run dev
+npm run dev:ui
 ```
 
 Then open:
 - `http://127.0.0.1:4310/?section=overview&lang=en`
 - `http://127.0.0.1:4310/?section=overview&lang=zh`
+
+Notes:
+- Prefer `npm run dev:ui`; it is the more reliable cross-platform entry, especially on Windows shells.
+- `npm run dev` only performs one monitor pass and does not start the HTTP UI.
 
 ## Section-by-section tour
 
@@ -127,7 +131,7 @@ For:
 4. `npm run build`
 5. `npm test`
 6. `npm run smoke:ui`
-7. `UI_MODE=true npm run dev`
+7. `npm run dev:ui`
 
 ## Installation and onboarding
 
@@ -312,6 +316,9 @@ LOCAL_TOKEN_AUTH_REQUIRED=true
 UI_MODE=false
 UI_PORT=4310
 
+# Optional only when a reverse proxy, container, or another machine must reach the UI:
+# UI_BIND_ADDRESS=0.0.0.0
+
 # Optional only when your paths differ from the defaults:
 # OPENCLAW_HOME=/path/to/.openclaw
 # OPENCLAW_CONFIG_PATH=/path/to/openclaw.json
@@ -330,6 +337,7 @@ Change only these values if your environment needs it:
 - `CODEX_HOME`: when Codex data is not stored in `~/.codex`
 - `OPENCLAW_SUBSCRIPTION_SNAPSHOT_PATH`: when your billing/subscription snapshot lives somewhere custom
 - `UI_PORT`: when `4310` is already in use
+- `UI_BIND_ADDRESS`: when your reverse proxy, container, or browser is not on the same loopback network and cannot reach the default `127.0.0.1` bind
 
 ### 5. Verify the install
 Run:
@@ -346,7 +354,7 @@ Expected result:
 
 ### 6. Start the UI
 ```bash
-UI_MODE=true npm run dev
+npm run dev:ui
 ```
 
 Then open:
@@ -354,6 +362,7 @@ Then open:
 - Chinese UI: `http://127.0.0.1:4310/?section=overview&lang=zh`
 
 If you changed `UI_PORT`, replace `4310` with your chosen port.
+If a reverse proxy, container, or another machine must reach the UI, also set `UI_BIND_ADDRESS=0.0.0.0`.
 
 ### 7. First-use checklist
 On your first launch, check these pages in order:
@@ -367,6 +376,7 @@ On your first launch, check these pages in order:
 - Empty live activity usually means `GATEWAY_URL` is wrong or the OpenClaw Gateway is not running.
 - Missing `Documents / Memory` agents usually means `OPENCLAW_HOME`, `OPENCLAW_CONFIG_PATH`, or `OPENCLAW_WORKSPACE_ROOT` points to the wrong place, or `openclaw.json` is missing.
 - Missing usage/subscription data usually means `CODEX_HOME` or `OPENCLAW_SUBSCRIPTION_SNAPSHOT_PATH` needs to be set.
+- If the address does not open or a reverse proxy cannot reach the app, first confirm you started `npm run dev:ui`; if the proxy is outside the same machine/container, set `UI_BIND_ADDRESS=0.0.0.0`.
 - If you only want a safe read-only dashboard, do not change the mutation defaults.
 
 ## Local commands
@@ -382,6 +392,9 @@ On your first launch, check these pages in order:
 - `npm run validate`
 
 For protected command modes (`command:backup-export`, `command:import-validate`, `command:acks-prune`), set `LOCAL_API_TOKEN=<token>` unless `LOCAL_TOKEN_AUTH_REQUIRED=false`.
+Also:
+- `npm run dev`: runs one monitor pass without starting the UI
+- `npm run dev:ui`: starts the local UI server
 
 ## Maintainer publishing notes
 If you are publishing the repository itself, not just installing it, use this section. Normal operators can skip it.
