@@ -892,6 +892,8 @@ interface LinkageGraph {
   };
 }
 
+const faviconBuffer = readFileSync(new URL("./favicon.ico", import.meta.url));
+
 export function startUiServer(port: number, toolClient: ToolClient): Server {
   const approvalActions = new ApprovalActionService(toolClient);
 
@@ -905,6 +907,12 @@ export function startUiServer(port: number, toolClient: ToolClient): Server {
       const path = url.pathname;
       const legacySection = resolveLegacyDashboardSection(path);
       const legacyAnchor = resolveLegacyDashboardAnchor(path);
+
+      if (method === "GET" && path === "/favicon.ico") {
+        res.writeHead(200, { "content-type": "image/x-icon", "cache-control": "public, max-age=86400" });
+        res.end(faviconBuffer);
+        return;
+      }
 
       if (method === "GET" && (path === "/" || legacySection)) {
         const prefs = await loadUiPreferences();
@@ -6473,6 +6481,7 @@ async function renderHtml(
 <head>
   <meta charset="utf-8" />
   <title>OpenClaw Control Center</title>
+  <link rel="icon" href="/favicon.ico" />
   <script>
     (() => {
       const key = 'openclaw:theme';

@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/inxx/Documents/develop/H5 projects/portfolio-v2/src/app/**)"
+    ]
+  }
+}
