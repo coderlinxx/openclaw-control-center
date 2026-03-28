@@ -16,6 +16,7 @@ import {
   READONLY_MODE,
 } from "../config";
 import type { ToolClient } from "../clients/tool-client";
+import { OpenClawCachedClient } from "../clients/openclaw-cached-client";
 import { mapSessionsListToSummaries } from "../mappers/openclaw-mappers";
 import { buildApiDocs } from "../runtime/api-docs";
 import { computeBudgetSummary } from "../runtime/budget-governance";
@@ -995,6 +996,16 @@ export function startUiServer(port: number, toolClient: ToolClient): Server {
 
       if (method === "GET" && path === "/snapshot") {
         assertAllowedQueryParams(url.searchParams, [], true);
+
+        // Browser F5 refresh sends Cache-Control: max-age=0 or Pragma: no-cache
+        // Clear cache to ensure fresh CLI data
+        const cacheControl = req.headers['cache-control'] || '';
+        const pragmaNoCache = req.headers['pragma'] === 'no-cache';
+        if ((cacheControl.includes('max-age=0') || pragmaNoCache)
+            && toolClient instanceof OpenClawCachedClient) {
+          toolClient.clearAllCaches();
+        }
+
         const body = await readSnapshotRaw();
         return writeText(res, 200, body, "application/json; charset=utf-8");
       }

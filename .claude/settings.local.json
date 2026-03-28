@@ -1,7 +1,21 @@
 {
   "permissions": {
     "allow": [
-      "Read(//Users/inxx/Documents/develop/H5 projects/portfolio-v2/src/app/**)"
+      "Read(//Users/inxx/Documents/develop/H5 projects/portfolio-v2/src/app/**)",
+      "Bash(openclaw gateway:*)",
+      "Bash(openclaw sessions:*)",
+      "Bash(npm install:*)",
+      "Bash(grep -l \"connect.challenge\\\\|connect.ready\" /Users/inxx/.nvm/versions/node/v24.14.0/lib/node_modules/openclaw/dist/*.js)",
+      "Bash(grep -l connect.challenge /Users/inxx/.nvm/versions/node/v24.14.0/lib/node_modules/openclaw/dist/*.js)",
+      "Bash(xargs cat:*)",
+      "Bash(brew install:*)",
+      "Bash(find /Users/inxx/.nvm/versions/node/v24.14.0/lib/node_modules/openclaw -name *.d.ts -o -name *.ts)",
+      "Bash(rm -f test-*.js package-lock.json)",
+      "Bash(npm uninstall:*)",
+      "Bash(npm run:*)",
+      "Bash(node --import tsx -c \"import\\(''./src/clients/openclaw-cached-client.ts''\\)\")",
+      "Bash(node --import tsx -e \"import\\(''./src/clients/openclaw-cached-client.ts''\\).then\\(\\(\\) => console.log\\(''OK''\\)\\).catch\\(e => console.error\\(e.message\\)\\)\")",
+      "Bash(ADAPTER_TYPE=live npm run dev)"
     ]
   }
 }

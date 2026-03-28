@@ -158,4 +158,17 @@ export class OpenClawCachedClient implements ToolClient {
     this.approvalsGetCache = undefined;
     return this.delegate.approvalsReject(request);
   }
+
+  /**
+   * Clear all caches forcefully.
+   * Called when user manually requests fresh data (e.g., refresh button).
+   * Ensures next query will hit the CLI, not the cache.
+   */
+  clearAllCaches(): void {
+    this.sessionsListCache = undefined;
+    this.cronListCache = undefined;
+    this.approvalsGetCache = undefined;
+    this.sessionStatusCache.clear();
+    this.sessionsHistoryCache.clear();
+  }
 }
