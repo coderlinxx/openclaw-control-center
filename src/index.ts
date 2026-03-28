@@ -34,6 +34,8 @@ async function start(): Promise<void> {
   const client = createToolClient();
   const adapter = new OpenClawReadonlyAdapter(client);
 
+  console.log(`[mission-control] using client: ${client.constructor.name}`);
+
   console.log("[mission-control] startup", {
     gateway: GATEWAY_URL,
     readonlyMode: READONLY_MODE,

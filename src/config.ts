@@ -24,12 +24,24 @@ export const TASK_HEARTBEAT_MAX_TASKS_PER_RUN = parsePositiveInt(
   3,
 );
 
+/**
+ * Polling intervals configuration (milliseconds).
+ * Can be overridden via environment variables:
+ *   - POLLING_INTERVAL_SESSIONS_LIST_MS
+ *   - POLLING_INTERVAL_SESSION_STATUS_MS
+ *   - POLLING_INTERVAL_CRON_MS
+ *   - POLLING_INTERVAL_APPROVALS_MS
+ *   - POLLING_INTERVAL_CANVAS_MS
+ *
+ * When using the cached adapter (ADAPTER_TYPE=cached), these intervals
+ * work together with CACHE_TTL_MS to determine effective query frequency.
+ */
 export const POLLING_INTERVALS_MS = {
-  sessionsList: 10000,
-  sessionStatus: 2000,
-  cron: 10000,
-  approvals: 2000,
-  canvas: 5000,
+  sessionsList: parsePositiveInt(process.env.POLLING_INTERVAL_SESSIONS_LIST_MS, 10000),
+  sessionStatus: parsePositiveInt(process.env.POLLING_INTERVAL_SESSION_STATUS_MS, 2000),
+  cron: parsePositiveInt(process.env.POLLING_INTERVAL_CRON_MS, 10000),
+  approvals: parsePositiveInt(process.env.POLLING_INTERVAL_APPROVALS_MS, 2000),
+  canvas: parsePositiveInt(process.env.POLLING_INTERVAL_CANVAS_MS, 5000),
 } as const;
 
 export type PollingTarget = keyof typeof POLLING_INTERVALS_MS;
